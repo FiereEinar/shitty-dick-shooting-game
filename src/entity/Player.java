@@ -13,44 +13,54 @@ public class Player extends Entity {
 	GamePanel gp;
 	KeyHandler keyHandler;
 	
+	public final int screenY;
+	public final int screenX;
+	
 	public Player(GamePanel gp, KeyHandler keyHandler) {
 		this.gp = gp;
 		this.keyHandler = keyHandler;
 		
-		this.x = 500;
-		this.y = 500;
+		this.worldX = 500;
+		this.worldY = 500;
+		
 		this.speed = 5;
 		this.damage = 5;
 		this.direction = "down";
+		
+		int offSet = gp.tileSize / 2;
+		
+		this.screenX = gp.screenWidth / 2 - offSet;
+		this.screenY = gp.screenHeight / 2 - offSet;
+		
 		getPlayerImage();
 	}
 	
 	public void update( ) {
 		if (keyHandler.UP) {
-			if (y >= 0) {
+			if (worldY >= 0) {
 				direction = "up";
-				y -= speed;				
+				worldY -= speed;				
 			}
 		}
 		
 		if (keyHandler.DOWN) {
-			if (y <= gp.screenHeight - gp.tileSize) {
+			if (worldY <= gp.worldHeight - gp.tileSize) {
 				direction = "down";
-				y += speed;				
+				worldY += speed;				
 			}
 		}
 		
 		if (keyHandler.LEFT) {
-			if (x >= 0) {
+			if (worldX >= 0) {
 				direction = "left";
-				x -= speed;				
+				worldX -= speed;				
 			}
 		}
 		
 		if (keyHandler.RIGHT) {
-			if (x <= gp.screenWidth - gp.tileSize) {
+			if (worldX <= gp.worldWidth - gp.tileSize) {
 				direction = "right";
-				x += speed;				
+				worldX += speed;				
 			}
 		}
 		
@@ -61,7 +71,7 @@ public class Player extends Entity {
 	public void draw(Graphics2D g2) {
 		BufferedImage image = getPlayerSpriteByDirection();
 		
-		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+		g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 	}
 	
 	public void getPlayerImage() {

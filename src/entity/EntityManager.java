@@ -11,7 +11,7 @@ public class EntityManager {
 	int bulletCounter = 0;
 	
 	GamePanel gp;
-	int enemyAmount = 50;
+	int enemyAmount = 10;
 
 	public EntityManager(GamePanel gp) {
 		this.gp = gp;
@@ -45,10 +45,12 @@ public class EntityManager {
 	}
 	
 	public void removeOutOfBoundsBullets() {
+		if (bullets.size() == 0) return; 
 		bullets.removeIf(b -> (b.destroy));		
 	}
 	
 	public void removeDeadEnemies() {
+		if (entities.size() == 0) return; 
 		entities.removeIf(e -> (e.isDead));
 	}
 

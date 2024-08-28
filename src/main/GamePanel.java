@@ -11,6 +11,7 @@ import entity.Bullets;
 import entity.Enemy;
 import entity.EntityManager;
 import entity.Player;
+import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 	
@@ -20,18 +21,26 @@ public class GamePanel extends JPanel implements Runnable {
 	final int scale = 4;
 	
 	public final int tileSize = originalTileSize * scale;
-	final int maxScreenCol = 20;
-	final int maxScreenRow = 12;
+	public final int maxScreenCol = 20;
+	public final int maxScreenRow = 12;
 	
 	public final int screenWidth = maxScreenCol * tileSize;
 	public final int screenHeight = maxScreenRow * tileSize;
+	
+	// WORLD
+	public final int maxWorldCol = 100;
+	public final int maxWorldRow = 100;
+	
+	public final int worldWidth = maxWorldCol * tileSize;
+	public final int worldHeight = maxWorldRow * tileSize;
 	
 	int FPS = 60;
 
 	KeyHandler keyHandler = new KeyHandler();
 	Thread gameThread;
-	Player player = new Player(this, keyHandler);
+	public Player player = new Player(this, keyHandler);
 	EntityManager EM = new EntityManager(this);
+	TileManager tileManager = new TileManager(this);
 	
 	public GamePanel() {
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -70,13 +79,13 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		player.update();
 		if (player.isShooting) 
-			EM.createBullets(player.x, player.y, player.direction);
+			EM.createBullets(player.screenX, player.screenY, player.direction);
 		
 		for (Enemy e: EM.entities) e.update();
-
+		
 		EM.removeDeadEnemies();
 		EM.removeOutOfBoundsBullets();
-		
+
 		for (Bullets b: EM.bullets) {
 
 			b.update();	
@@ -92,7 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
 					
 				}
 			}
-		}
+		}		
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -101,6 +110,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		tileManager.draw(g2);
 		player.draw(g2);
 		
 		for (Enemy e: EM.entities) e.draw(g2);
